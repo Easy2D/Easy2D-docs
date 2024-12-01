@@ -1,0 +1,36 @@
+name: Deploy to Tencent Cloud COS
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'pnpm'
+
+    - name: build
+      run: |
+        pnpm i
+        pnpm build
+
+    - name: Upload
+      uses: zkqiang/tencent-cos-action@v0.1.0
+      with:
+        args: upload -rf --sync --delete -y ./build/ /
+        secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
+        secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
+        bucket: easy2d-docs-1252696634
+        region: ap-guangzhou
