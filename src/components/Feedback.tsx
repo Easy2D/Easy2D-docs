@@ -46,7 +46,7 @@ const FeedbackForm = forwardRef<
       )}
     >
       <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        Was this page helpful?
+        这个页面对你有帮助吗？
       </p>
       <div className="group grid h-8 grid-cols-[1fr,1px,1fr] overflow-hidden rounded-full border border-zinc-900/10 dark:border-white/10">
         <FeedbackButton data-response="yes">Yes</FeedbackButton>
@@ -72,7 +72,7 @@ const FeedbackThanks = forwardRef<
     >
       <div className="flex items-center gap-3 rounded-full bg-emerald-50/50 py-1 pl-1.5 pr-3 text-sm text-emerald-900 ring-1 ring-inset ring-emerald-500/20 dark:bg-emerald-500/5 dark:text-emerald-200 dark:ring-emerald-500/30">
         <CheckIcon className="h-5 w-5 flex-none fill-emerald-500 stroke-white dark:fill-emerald-200/20 dark:stroke-emerald-200" />
-        Thanks for your feedback!
+        感谢你的反馈！
       </div>
     </div>
   )
