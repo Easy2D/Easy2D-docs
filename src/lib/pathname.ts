@@ -1,5 +1,9 @@
 import { usePathname } from 'next/navigation'
 
 export const useClearPathname = () => {
-  return usePathname().replace(/\/$/g, '')
+  const pathname = usePathname()
+  if (pathname === '/') {
+    return pathname
+  }
+  return pathname.replace(/\/$/g, '')
 }
