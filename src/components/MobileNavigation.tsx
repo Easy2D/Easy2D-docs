@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, Suspense, useContext, useEffect, useRef } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import {
   Dialog,
   DialogPanel,
@@ -13,6 +13,7 @@ import { create } from 'zustand'
 
 import { Header } from '@/components/Header'
 import { Navigation } from '@/components/Navigation'
+import { useClearPathname } from '@/lib/pathname'
 
 function MenuIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -51,7 +52,7 @@ function MobileNavigationDialog({
   isOpen: boolean
   close: () => void
 }) {
-  let pathname = usePathname()
+  let pathname = useClearPathname()
   let searchParams = useSearchParams()
   let initialPathname = useRef(pathname).current
   let initialSearchParams = useRef(searchParams).current

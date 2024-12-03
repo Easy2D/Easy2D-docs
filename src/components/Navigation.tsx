@@ -2,7 +2,6 @@
 
 import { useRef } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { AnimatePresence, motion, useIsPresent } from 'framer-motion'
 
@@ -11,6 +10,7 @@ import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
 import { useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
 import { remToPx } from '@/lib/remToPx'
+import { useClearPathname } from '@/lib/pathname'
 
 interface NavGroup {
   title: string
@@ -157,7 +157,7 @@ function NavigationGroup({
   // The state will still update when we re-open (re-render) the navigation.
   let isInsideMobileNavigation = useIsInsideMobileNavigation()
   let [pathname, sections] = useInitialValue(
-    [usePathname(), useSectionStore((s) => s.sections)],
+    [useClearPathname(), useSectionStore((s) => s.sections)],
     isInsideMobileNavigation,
   )
 
@@ -258,9 +258,7 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
   return (
     <nav {...props}>
       <ul role="list">
-        <TopLevelNavItem href="/">API</TopLevelNavItem>
-        <TopLevelNavItem href="#">Documentation</TopLevelNavItem>
-        <TopLevelNavItem href="#">Support</TopLevelNavItem>
+        <TopLevelNavItem href="https://easy2d.cn">回到官网</TopLevelNavItem>
         {navigation.map((group, groupIndex) => (
           <NavigationGroup
             key={group.title}
@@ -268,11 +266,11 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
             className={groupIndex === 0 ? 'md:mt-0' : ''}
           />
         ))}
-        <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
+        {/* <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
           <Button href="#" variant="filled" className="w-full">
             Sign in
           </Button>
-        </li>
+        </li> */}
       </ul>
     </nav>
   )

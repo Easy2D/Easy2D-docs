@@ -11,7 +11,7 @@ import {
   useState,
 } from 'react'
 import Highlighter from 'react-highlight-words'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   type AutocompleteApi,
   type AutocompleteCollection,
@@ -23,6 +23,7 @@ import clsx from 'clsx'
 
 import { navigation } from '@/components/Navigation'
 import { type Result } from '@/mdx/search.mjs'
+import { useClearPathname } from '@/lib/pathname'
 
 type EmptyObject = Record<string, never>
 
@@ -332,7 +333,7 @@ function SearchDialog({
       setOpen(false)
     },
   })
-  let pathname = usePathname()
+  let pathname = useClearPathname()
   let searchParams = useSearchParams()
 
   useEffect(() => {
