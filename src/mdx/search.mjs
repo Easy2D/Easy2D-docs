@@ -1,4 +1,4 @@
-import { slugifyWithCounter } from '@sindresorhus/slugify'
+import GithubSlugger from 'github-slugger'
 import glob from 'fast-glob'
 import * as fs from 'fs'
 import { toString } from 'mdast-util-to-string'
@@ -12,7 +12,7 @@ import * as url from 'url'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const processor = remark().use(remarkMdx).use(extractSections)
-const slugify = slugifyWithCounter()
+const slugger = new GithubSlugger()
 
 function isObjectExpression(node) {
   return (
@@ -27,13 +27,13 @@ function excludeObjectExpressions(tree) {
 
 function extractSections() {
   return (tree, { sections }) => {
-    slugify.reset()
+    slugger.reset()
 
     visit(tree, (node) => {
       if (node.type === 'heading' || node.type === 'paragraph') {
         let content = toString(excludeObjectExpressions(node))
         if (node.type === 'heading' && node.depth <= 2) {
-          let hash = node.depth === 1 ? null : slugify(content)
+          let hash = node.depth === 1 ? null : slugger.slug(content)
           sections.push([content, hash, []])
         } else {
           sections.at(-1)?.[2].push(content)

@@ -1,4 +1,4 @@
-import { slugifyWithCounter } from '@sindresorhus/slugify'
+import GithubSlugger from 'github-slugger'
 import * as acorn from 'acorn'
 import { toString } from 'mdast-util-to-string'
 import { mdxAnnotations } from 'mdx-annotations'
@@ -53,10 +53,10 @@ function rehypeShiki() {
 
 function rehypeSlugify() {
   return (tree) => {
-    let slugify = slugifyWithCounter()
+    let slugger = new GithubSlugger()
     visit(tree, 'element', (node) => {
       if (node.tagName === 'h2' && !node.properties.id) {
-        node.properties.id = slugify(toString(node))
+        node.properties.id = slugger.slug(toString(node))
       }
     })
   }
