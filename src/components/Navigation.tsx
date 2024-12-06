@@ -241,7 +241,7 @@ export const navigation: Array<NavGroup> = [
       { title: '节点类型', href: '/nodes' },
       { title: '节点动画', href: '/actions' },
       { title: '事件监听', href: '/listeners' },
-      { title: '辅助工具', href: '/utils' },
+      { title: '游戏工具', href: '/utils' },
     ],
   },
   {
