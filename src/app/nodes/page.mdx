@@ -1,0 +1,596 @@
+export const metadata = {
+  title: '快速上手',
+  description: '学习 Easy2D 的基础概念和用法',
+}
+
+# 节点类型
+
+场景中所有的元素都被称为`Node(节点)`，比如场景中的一个按钮，或者一张图片，它们都是节点的一种。{{ className: 'lead' }}
+
+## Node 节点
+
+Node 是一个抽象的含义，它表示场景中的一个元素。
+
+```cpp
+auto node = gcnew Node;    // 创建一个空节点
+```
+
+节点的常用属性有`名称(name)`、`坐标(pos)`、`宽度(width)`、`高度(height)`、`缩放程度(scale)`、`旋转角度(rotation)`、`不透明度(opacity)`、`锚点(anchor)`等。
+使用`get`+`属性名`的函数可以获取节点的属性，`set`+`属性名`的函数可以修改它的属性，如下所示。
+
+```cpp
+// 使用 set + Pos 修改节点坐标
+node->setPos(posX, posY);
+// 可以单独设置横坐标和纵坐标
+node->setPosX(posX);
+node->setPosY(posY);
+// 使用 get + Pos 可以获取节点坐标
+Point pos = node->getPos();
+float posX = node->getPosX();
+float posY = node->getPosY();
+```
+
+<Note>
+  `Point` 是一个结构体，它表示一个坐标，它有 x 和 y 两个成员变量。
+  ```cpp
+  Point p1;          // 创建一个 (0, 0) 坐标
+  Point p2(10, 10);  // 创建一个 (10, 10) 坐标
+  ```
+</Note>
+
+有时也许你需要区分不同的节点，那么可以设置它的名称
+
+```cpp
+node->setName("name_test");    // 设置节点名称
+String name = node->getName();  // 获取节点名称
+```
+
+<Note>
+  `String` 类表示一个字符串。
+  ```cpp
+  String str = "Hello World";
+  ```
+</Note>
+
+### 节点的父子结构
+
+节点以树形模型储存，每个节点都只能有一个父节点，和任意数量的子节点，一个树状模型如下图所示。
+
+![节点的树型模型](/assets/images/tutorial/tree.png)
+
+`Node::addChild`函数用来添加子节点。例如，下面的代码将 node2 作为了 node1 的子节点：
+
+```cpp
+auto node1 = gcnew Node;
+auto node2 = gcnew Node;
+node1->addChild(node2);    // 添加子节点
+```
+
+node1 和 node2 成为父子关系，node1 是 node2 的父节点，node2 是 node1 的子节点。当父节点被添加到场景中时，子节点也会一起进入场景，当父节点从场景中删除时，子节点也会消失。
+
+<Note>
+  节点的属性是向下传递的。
+  
+  因此，移动父节点的坐标，所有的子节点都会跟着一起移动，旋转父节点，所有的子节点会跟着一起旋转，这样你就可以用 Node 实现任意的层次结构。
+</Note>
+
+`Node::removeChild`函数用于删除子节点，只有当这个节点确实是子节点时，这个函数才调用成功。
+
+```cpp
+// 移除子节点
+node->removeChild(node2);
+```
+
+`Node::getChildrenCount`函数用于获取子节点的数量，如下所示。
+
+```cpp
+// 获取子节点的数量
+int num = node->getChildrenCount();
+```
+
+### 节点的顺序
+
+另外，添加子节点时，先被添加的节点会被后添加的节点遮挡。例如，下面的代码中，node3 将遮挡 node2。
+
+```cpp
+node1->addChild(node2);
+node1->addChild(node3);
+```
+
+你可以在添加节点时指定它的渲染顺序。例如下面的代码，虽然 node3 在 node2 后面添加，但是 node2 的顺序为 2，比 node3 大，所以屏幕上 node2 将遮挡 node3。
+
+```cpp
+node1->addChild(node2, 2); // 渲染顺序为 2 的节点会显示在 1 的上方
+node1->addChild(node3, 1);
+```
+
+当然也可以直接设置节点的渲染顺序：
+
+```cpp
+node2->setOrder(2);
+node3->setOrder(1);
+
+node1->addChildren({ node2, node3 });
+```
+
+**根节点**是树型模型最顶端的节点，场景包含了根节点，所以屏幕上所有的节点都是它的子节点。将一个精灵添加入场景，其实是把精灵加入了场景的树型模型中。Easy2D 会遍历场景的树，对树上的所有节点做出处理。
+
+![场景和节点的关系](/assets/images/tutorial/scene.png)
+
+### 节点的事件监听
+
+节点可以收到 `鼠标点击事件`、`键盘按下事件`、`键盘抬起事件` 等等事件，并且使用 `Listener（监听器）` 来监听某一事件的发生。
+
+有关监听器的更多用法，请查阅 [Listener 监听器](/tutorial/common/listener.html)
+
+### 节点的更多功能
+
+节点类有一些简单的函数用来判断碰撞，`Node::containsPoint` 函数可以判断一个坐标点是否在节点内部，如下所示
+
+```cpp
+// 假设存在节点 node
+// 创建一个坐标点
+Point p(200, 300);
+// 判断这个点是否在节点内部
+if (node->containsPoint(p))
+{
+    // 坐标点在节点内
+}
+```
+
+`Node::getBoundingBox` 函数可以获取节点的外包围盒，它可以用来判断两个节点是否相交（碰撞）
+
+```cpp
+// 假设存在节点 node1 和 node2，判断两节点是否碰撞
+// 先获取两节点的外包围盒
+auto box1 = node1->getBoundingBox();
+auto box2 = node2->getBoundingBox();
+// 判断包围盒是否相交，相交即认为碰撞
+if (box1.intersects(box2))
+{
+    // 两节点发生碰撞
+}
+```
+
+有关碰撞判断的更多用法，请查阅 [节点碰撞](/tutorial/advanced/collision.html)
+
+
+## Text 文本
+
+Text 是节点的一种，它包含了一段文字，这样可以把每段文字都当做一个对象进行处理。
+
+```cpp
+auto text = gcnew Text("Hello Easy2D!");
+```
+
+![Text示意图](/assets/images/tutorial/text1.png)
+
+Text 支持节点的所有通用属性，例如坐标、缩放、旋转角度、不透明度等
+
+<div class="jg-box">
+![Text旋转](/assets/images/tutorial/text3.png)
+![Text放大](/assets/images/tutorial/text4.png)
+![Text半透明](/assets/images/tutorial/text5.png)
+</div>
+
+```cpp
+// 顺时针旋转 30 度
+text->setRotation(30);
+// 放到至原来的两倍
+text->setScale(2);
+// 不透明度设为 0.5
+text->setOpacity(0.5f);
+```
+
+### 文字样式
+
+`TextStyle` 结构体提供了字体、对齐方式等文字样式设定。
+
+```cpp
+// 创建文字样式
+TextStyle style;
+style.font = Font("宋体");         // 设置字体
+style.alignment = TextAlign::Left;  // 左对齐
+style.wrapping = true;              // 开启自动换行
+style.wrappingWidth = 70;           // 文字自动换行的宽度
+style.lineSpacing = 10;             // 行间距
+style.hasUnderline = true;          // 下划线
+style.hasStrikethrough = true;      // 删除线
+
+// 设置文字样式
+auto text = gcnew Text("Hello Easy2D!");
+text->setTextStyle(style);
+```
+
+<Note>
+  Font 文字控制文字的字体、字号、粗细等等，详情请参阅 [Font 字体](/tutorial/common/font.html)。
+</Note>
+
+可以单独设置某一项样式，例如文字比较多，你可以设置它自动换行：
+
+```cpp
+auto text = gcnew Text("Hello Easy2D!");
+text->setWordWrappingEnable(true);  // 开启自动换行
+text->setWordWrappingWidth(70);     // 设置文字自动换行的宽度
+```
+
+![Text自动换行](/assets/images/tutorial/text6.png)
+
+### 绘图样式
+
+`Text` 支持设置 `DrawingStyle` 绘图样式，以设置文字填充颜色、描边颜色等，详情请参阅 [DrawingStyle](/tutorial/common/drawing-style.html)。
+
+```cpp
+// 创建文字绘图样式
+DrawingStyle style;
+style.mode = DrawingStyle::Mode::Solid; // 绘图模式为填充
+style.fillColor = Color::White;         // 文字填充色
+style.strokeColor = Color::Red;         // 文字描边色
+style.strokeWidth = 2.0;                // 文字描边宽度为 2.0
+style.lineJoin = LineJoin::Miter;       // 线条相交样式
+
+// 设置绘图样式
+auto text = gcnew Text("Hello Easy2D!");
+text->setDrawingStyle(style);
+```
+
+
+## Sprite 精灵
+
+Sprite 可以说是引擎中最常见的类，它通常是一张图片，用来表示游戏中的一个物体。
+
+你可以用 `open` 函数打开本地文件的一张图片。
+
+```cpp
+auto sprite = gcnew Sprite;
+sprite->open("本地图片.png"); // 从本地图片加载
+```
+
+![Sprite示意图](/assets/images/tutorial/sprite1.png)
+
+如果你只需要图片中的一部分，可以使用 `crop` 函数对它进行裁剪
+
+```cpp
+// 从原图片的像素坐标 (20, 10) 处开始裁剪
+// 裁剪宽度为 60 像素，高度为 80 像素
+sprite->crop(Rect(20, 10, 60, 80));
+```
+
+![裁剪后的精灵](/assets/images/tutorial/sprite2.png)
+
+上面的内容都可以在 Sprite 的构造函数中进行
+
+```cpp
+// 从本地图片加载精灵，并对图片进行裁剪
+auto sprite = gcnew Sprite("本地图片.png", Rect(20, 10, 60, 80));
+```
+
+你可以更灵活的运用 `crop` 函数，比如下面的代码把精灵裁剪成了原来的一半
+
+```cpp
+sprite->crop(Rect(0, 0, sprite->getWidth(), sprite->getHeight() / 2));
+```
+
+![裁剪后的精灵](/assets/images/tutorial/sprite3.png)
+
+Sprite 具有节点的通用属性，你可以对它进行移动、旋转、缩放等操作
+
+<div class="jg-box">
+![Sprite旋转](/assets/images/tutorial/sprite5.png)
+![Sprite放大](/assets/images/tutorial/sprite6.png)
+![Sprite半透明](/assets/images/tutorial/sprite7.png)
+</div>
+
+```cpp
+// 顺时针旋转 30 度
+sprite->setRotation(30);
+// 放到至原来的两倍
+sprite->setScale(2);
+// 不透明度设为 0.5
+sprite->setOpacity(0.5f);
+```
+
+
+## Button 按钮
+
+`ButtonListener` 按钮事件监听器提供了按钮基础功能，它可以添加到任何一个节点上，所以它可以让一段文字或者一个精灵变成按钮。
+
+例如，下面的代码创建了一个点击后退出游戏的按钮
+
+```cpp
+// 假设有一个精灵 sprite，把它变成退出游戏的按钮
+// 创建点击按钮后的回调函数
+auto callback = [](ButtonEvent evt)
+{
+    if (evt == ButtonEvent::Clicked)
+    {
+        // 点击了按钮，退出游戏
+        Game::quit();
+    }
+};
+
+// 给 sprite 添加监听器
+auto lis = gcnew ButtonListener(callback);
+sprite->addListener(lis);
+
+// 游戏暂停时，让这个按钮继续工作
+lis->ignoreGamePaused();
+```
+
+<Note>
+  回调函数的使用方法请参考 [[关于回调函数]](/tutorial/advanced/more.html#关于回调函数)。
+</Note>
+
+`ButtonEvent` 是按钮相关事件，它的定义如下
+
+```cpp
+// 按钮事件
+enum class ButtonEvent
+{
+	MouseEntered,  // 鼠标浮于按钮上
+	MouseExited,   // 鼠标从按钮上移出
+	Pressed,       // 鼠标按下
+	Clicked,       // 鼠标点击
+};
+```
+
+
+### 开关按钮
+
+开关按钮用来实现有 “开” 和 “关” 两种状态的按钮，例如背景音乐的开关等，`ToggleButtonListener` 开关按钮事件监听器提供了开关按钮功能，它可以添加到任何一个节点上。
+
+例如，下面的代码创建了一个可以控制音乐的播放与停止的按钮
+
+```cpp
+// 假设有一个精灵 sprite，把它变成控制音乐播放的按钮
+// 创建点击按钮后的回调函数
+auto callback = [](ButtonEvent evt, bool state)
+{
+    if (evt == ButtonEvent::Clicked)
+    {
+        // 点击了按钮
+        if (state)
+        {
+            // 按钮现在是打开状态，播放音乐
+            MusicPlayer::resume("music.wav");
+        }
+        else
+        {
+            // 按钮现在是关闭状态，停止音乐
+            MusicPlayer::pause("music.wav");
+        }
+    }
+};
+
+// 给 sprite 添加监听器
+auto lis = gcnew ToggleButtonListener(true /* 默认是打开状态 */, callback);
+sprite->addListener(lis);
+
+// 游戏暂停时，让这个按钮继续工作
+lis->ignoreGamePaused();
+```
+
+<Note>
+  回调函数的使用方法请参考 [[关于回调函数]](/tutorial/advanced/more.html#关于回调函数)。
+</Note>
+
+
+## Shape 形状
+
+Shape 是一个二维图形，例如矩形、圆形等，Easy2D 提供了几种简单图形的创建方式：
+
+```cpp
+// 创建一个从 (0,0) 到 (100,100) 的直线
+auto line = gcnew Shape(Shape::Line, Point(0, 0), Point(100, 100));
+// 创建一个宽高为 (10,20) 的矩形
+auto rect = gcnew Shape(Shape::Rect, Rect(Point(), Size(10, 20)));
+// 创建一个宽高为 (10,20) ，圆角角度为 (40,20) 的圆角矩形
+auto roundedRect = gcnew Shape(Shape::RoundedRect, Rect(Point(), Size(10, 20)), Vector2(40, 20));
+// 创建一个半径为 10 的圆形
+auto circle = gcnew Shape(Shape::Circle, Point(), 10);
+// 创建一个半径为 (10,20) 的椭圆形
+auto ellipse = gcnew Shape(Shape::Ellipse, Point(), Vector2(10, 20));
+// 创建一个多边形
+auto polygon = gcnew Shape(Shape::Polygon, { Point(), Point(100, 100), Point(0, 100) });
+```
+
+形状具有周长、面积等属性：
+
+```cpp
+shape->getLength();     // 获取周长
+shape->computeArea();   // 计算面积
+```
+
+形状还有一些辅助方法：
+
+```cpp
+shape->getBoundingBox();            // 获取形状外包围盒
+shape->containsPoint(Point(5, 5));  // 判断点是否在形状内
+
+// 计算形状长度为 1 时点的位置和切线向量
+Point p;
+Vector2 tangent;
+shape->computePointAtLength(
+    1,          // 长度，应 >= 0 && <= getLength()
+    p,          // 返回点坐标
+    tangent     // 返回切线向量
+);
+```
+
+## ShapeMaker 形状生成器
+
+复杂形状可以用 ShapeMaker 来构造，如创建一个三角形：
+
+```cpp
+// 等边三角形边长
+float side = 45.f;
+
+// 使用形状生成器创建三角形三条边
+ShapeMaker maker;
+// 从三角形第一个点开始描绘形状
+maker.beginPath(Point(0, 0));
+// 添加第一条边
+maker.addLine(Point(side, 0));
+// 添加第二条边
+maker.addLine(Point(side / 2, side * math::Cos(30.0f)));
+// 闭合路线，形成第三条边
+maker.endPath(true);
+// 获取形状
+auto triangle = maker.getShape();
+```
+
+ShapeMaker 提供的形状生成方法有以下几种：
+
+```cpp
+// 添加一条边
+maker.addLine(Point());
+// 添加多条边
+maker.addLines({ Point(), Point() });
+// 添加贝塞尔曲线
+maker.addBezier(
+    Point(),    // 贝塞尔曲线的第一个控制点
+    Point(),    // 贝塞尔曲线的第二个控制点
+    Point()     // 贝塞尔曲线的终点
+);
+// 添加弧线
+maker.addArc(
+    Point(),    // 弧线终点
+    Size(),     // 椭圆半径
+    120,        // 椭圆旋转角度
+    true,       // 是否顺时针
+    true        // 是否取小于 180° 的弧
+);
+```
+
+<Note>
+  形状生成必须在 `beginPath` 和 `endPath` 之间完成。
+</Note>
+
+ShapeMaker 还可以合并两个形状
+
+```cpp
+// 创建两个形状
+auto rect = gcnew Shape(Shape::Rect, Rect(Point(), Size(10, 20)));
+auto circle = gcnew Shape(Shape::Circle, Point(), 10);
+// 用交集方式合并
+auto shape = ShapeMaker::combine(rect, circle, ShapeMaker::CombineMode::Union);
+```
+
+ShapeMaker 支持的合并方式有以下几种
+
+```cpp
+// 形状合并方式
+enum class CombineMode
+{
+    Union,      // 并集 (A + B)
+    Intersect,  // 交集 (A + B)
+    Xor,        // 对称差集 ((A - B) + (B - A))
+    Exclude     // 差集 (A - B)
+};
+```
+
+## ShapeNode 形状节点
+
+`Shape 形状` 不是节点，所以不可以直接加入到场景中，需要添加到 ShapeNode 才可以具备节点的性质，例如移动
+
+```cpp
+// 创建一个宽高为 (10,20) 的矩形
+auto rect = gcnew Shape(Shape::Rect, Rect(Point(), Size(10, 20)));
+// 创建矩形节点
+auto shapeNode = gcnew ShapeNode(rect);
+// 移动矩形到 (100, 100) 坐标处
+shapeNode->setPos(100, 100);
+// 添加到场景中
+scene->addChild(shapeNode);
+```
+
+### 填充与轮廓
+
+`ShapeNode` 支持设置 `DrawingStyle` 绘图样式，以设置填充颜色、描边颜色等，详情请参阅 [DrawingStyle](/tutorial/common/drawing-style.html)。
+
+```cpp
+// 创建绘图样式
+DrawingStyle style;
+style.mode = DrawingStyle::Mode::Solid; // 绘图模式为填充
+style.fillColor = Color::White;         // 填充色
+style.strokeColor = Color::Red;         // 描边色
+style.strokeWidth = 2.0;                // 描边宽度为 2.0
+style.lineJoin = LineJoin::Miter;       // 线条相交样式
+
+// 设置绘图样式
+auto shapeNode = ShapeNode::createRect(Size(10, 10));
+shapeNode->setDrawingStyle(style);
+```
+
+也可以单独设置某一项样式
+
+```cpp
+// 创建一个宽高为 (10, 20) 的矩形
+auto rect = gcnew ShapeNode(Shape::Rect, Size(10, 20));
+// 设置填充颜色为红色
+rect->setFillColor(Color::Red);
+// 设置轮廓颜色为白色
+rect->setStrokeColor(Color::White);
+// 设置轮廓线条宽度为 2
+rect->setStrokeWidth(2.0);
+```
+
+
+## Canvas 画布
+
+画布 `Canvas` 是节点的一种，提供了基础图形库功能，可以手动绘制形状、图像、文本等。
+
+一个简单示例：
+
+```cpp
+// 创建一张 (300, 200) 大小的画布
+auto canvas = gcnew Canvas(Size(300, 200));
+// 设置绘图函数为 MyDrawing 函数
+canvas->draw(MyDrawing);
+// 添加到场景中
+scene->addChild(canvas);
+
+// MyDrawing 的实现
+void MyDrawing(CanvasBrush* brush)
+{
+    // brush 是画布的画笔，画笔同样有坐标、旋转角度、缩放等属性
+    // 我们移动一下画笔
+    brush->setPos(Point(20, 20));
+
+    // 画一个绿色矩形
+    // 画笔具有 DrawingStyle 绘图样式属性，我们设置画笔为绿色
+    brush->setFillColor(Color::Green);
+    // 设置画笔绘图模式为填充
+    brush->setDrawingMode(DrawingStyle::Mode::Solid);
+    // 画矩形
+    brush->drawShape(gcnew Shape(Shape::Rect, Rect(Point(), Size(300, 200))));
+
+    // 写一段文字
+    // 移动一下画笔
+    brush->setPos(Point(120, 20));
+    // 旋转一下画笔
+    brush->setRotation(-30);
+    // 设置填充色为橘红色
+    brush->setFillColor(Color::OrangeRed);
+    // 写文字
+    brush->drawText("Hello", Point(), Font("", 22, Font::Weight::Bold));
+
+    // 画一张图片
+    brush->drawImage(Image::load("image.png"));
+}
+```
+
+`CanvasBrush` 支持设置 `DrawingStyle` 绘图样式，以设置填充颜色、描边颜色等，详情请参阅 [DrawingStyle](/tutorial/common/drawing-style.html)。
+
+```cpp
+// 创建绘图样式
+DrawingStyle style;
+style.mode = DrawingStyle::Mode::Solid; // 绘图模式为填充
+style.fillColor = Color::White;         // 填充色
+style.strokeColor = Color::Red;         // 描边色
+style.strokeWidth = 2.0;                // 描边宽度为 2.0
+style.lineJoin = LineJoin::Miter;       // 线条相交样式
+
+// 设置绘图样式
+brush->setDrawingStyle(style);
+```

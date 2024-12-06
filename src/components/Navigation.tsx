@@ -236,10 +236,8 @@ export const navigation: Array<NavGroup> = [
       { title: '简介', href: '/' },
       { title: '快速上手', href: '/quickstart' },
       { title: '简单示例', href: '/demos' },
-      { title: 'Authentication', href: '/authentication' },
-      { title: 'Pagination', href: '/pagination' },
-      { title: 'Errors', href: '/errors' },
-      { title: 'Webhooks', href: '/webhooks' },
+      { title: '节点类型', href: '/nodes' },
+      { title: '节点动画', href: '/actions' },
     ],
   },
   {
