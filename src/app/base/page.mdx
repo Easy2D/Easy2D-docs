@@ -1,0 +1,365 @@
+export const metadata = {
+  title: '基础类型',
+  description: 'TODO',
+}
+
+## Point 坐标点
+
+Point 类表示一个二维坐标系中的点，具有 `x` 和 `y` 两个属性。
+
+```cpp
+// 创建一个坐标为 (10, 20) 的点
+Point p = Point(10, 20);
+```
+
+Point 之间可以做加减乘除运算：
+
+```cpp
+Point p1 = Point(10, 20);
+Point p2 = Point(0, -5);
+// 将两坐标相加
+Point p3 = p1 + p2;
+// 输出 p3 的坐标
+// 输出结果为 (10, 15)
+Logger::messageln("(%f, %f)", p3.x, p3.y);
+```
+
+Point 提供了计算两点间距离的函数
+
+```cpp
+Point p1 = Point(10, 20);
+Point p2 = Point(0, -5);
+// 计算两点间距离
+float distance = Point::distance(p1, p2);
+```
+
+
+## Size 大小
+
+Size 类表示一个二维坐标系中的物体大小，具有 `width` 和 `height` 两个属性。
+
+```cpp
+// 创建一个宽度为 10，高度为 20 的大小
+Size size = Size(10, 20);
+```
+
+Size 之间可以做加减乘除运算：
+
+```cpp
+Size size1 = Size(10, 20);
+Size size2 = Size(0, -5);
+// 将两大小相加
+Size size3 = size1 + size2;
+// 输出 size3 的宽高
+// 输出结果为 (10, 15)
+Logger::messageln("(%f, %f)", size3.width, size3.height);
+```
+
+
+## String 字符串
+
+String 类是储存字符串内容的容器，是 std::string 类型的别名。
+
+它曾经是 Easy2D 中实现的一种同时支持 char* 和 wchar_t* 的字符串类型，后来为了程序的兼容性，Easy2D 抛弃了这种方式，而选择 C++ 标准库提供的字符串类型。
+
+因为 String 只是简单的给 std::string 起了个别名，所以有关 String 的用法你都可以在各大学习网站上找到。
+
+在本教程中，只简单解答一下新手使用 String 时的疑问：
+
+
+**Q:** 我的代码需要用到 `wchar_t*/WCHAR*/PWSTR` 类型的字符串，如何从 Easy2D String 转换？  
+**A:**  
+Easy2D 提供了 `NarrowToWide` 和 `WideToNarrow` 函数可以将字符串在 ASCII（std::string） 和 Unicode（std::wstring） 之间进行转换。
+
+
+**Q:** std::wstring 和 std::string 在使用时有什么不同？  
+**A:**  
+std::wstring 是 std::string 的 Unicode 版本，其中 w 的意思是 wide（宽），因为其储存的 wchar_t 是宽字符类型；使用时需要注意的地方有，将 std::cout、std::cin、std::to_string 等相关函数替换为 std::wcout、std::wcin、std::to_wstring 的宽字符版本。
+
+
+## Color 颜色
+
+Color 类表示一个 红、绿、蓝 三原色及 alpha 通道组成的颜色模型（RGBA颜色模型）
+
+可以指定 RGB 三原色的程度来构造一个颜色：
+
+```cpp
+// 构造一个纯红色
+// 因为它的 R 值为最大（1.0），GB值为最小（0.0）
+Color red = Color(1.0, 0.0, 0.0);
+```
+
+可以指定 alpha 通道的程度来表示颜色的透明度，0.0表示全透明，1.0表示不透明：
+
+```cpp
+// 构造一个纯红色，且透明度为 0.7
+Color red = Color(1.0, 0.0, 0.0, 0.7);
+```
+
+可以使用十六进制的RGB颜色值来表示一个颜色：
+
+```cpp
+// 构造一个纯红色
+// 因为它的 R 值为最大（FF），GB值为最小（00）
+Color red = Color(0xFF0000);
+```
+
+Color 类提供了常用颜色的枚举值，如下：
+
+```cpp
+Color::White        // 白色
+Color::Black        // 黑色
+Color::Blue         // 蓝色
+Color::Brown        // 棕色
+Color::Gray         // 灰色
+Color::Green        // 绿色
+Color::Red          // 红色
+Color::Pink         // 粉色
+Color::Orange       // 橘黄色
+Color::OrangeRed    // 橘红色
+Color::Purple       // 紫色
+Color::Yellow       // 黄色
+
+Color::Chocolate    // 巧克力色
+Color::Gold         // 金色
+
+Color::LightBlue    // 淡蓝色
+Color::LightGray    // 淡灰色
+Color::LightGreen   // 淡绿色
+
+Color::DarkBlue     // 深蓝色
+Color::DarkGray     // 深灰色
+Color::DarkGreen    // 深绿色
+
+// 还有更多，不再列出
+```
+
+
+
+## KeyCode 键值
+
+KeyCode 枚举了键盘上几乎所有按键的键值。
+
+字母键：
+
+```cpp
+// 字母 A 键
+KeyCode::A
+// 字母 Z 键
+KeyCode::Z
+```
+
+数字键：
+
+```cpp
+// 数字 0 键
+KeyCode::Num0
+// 数字 9 键
+KeyCode::Num9
+```
+
+数字小键盘键：
+
+```cpp
+// 数字小键盘 0 键
+KeyCode::Numpad0
+// 数字小键盘 9 键
+KeyCode::Numpad9
+```
+
+其他常用键：
+
+```cpp
+// 回车
+KeyCode::Enter
+// 退出键
+KeyCode::Esc
+// 上下左右键
+KeyCode::Up
+KeyCode::Down
+KeyCode::Left
+KeyCode::Right
+// 空格
+KeyCode::Space
+```
+
+使用 KeyCode 配合 Input 类可以获取用户按键输入，例如：
+
+```cpp
+// 获取字母 A 键是否正被按下
+bool isDown = Input::isDown(KeyCode::A);
+```
+
+关于 Input 类的使用请查阅 [Input 获取用户输入](/tutorial/base/input.html)
+
+
+
+## Image 图片
+
+`Image` 表示图片，程序中使用的每一张图片都对应一个 Image 对象。
+
+每个 Sprite 都包含一个 Image 对象，例如当你创建很多个像下图一样的 Sprite 时，它们包含的 Image 对象其实是同一个。这样做的好处就是节省内存。
+
+![一大堆Sprite使用了同一张图片](/assets/images/tutorial/texture.png)
+
+Image 的另一个作用就是创建`Animation(帧动画)`，这个部分在动画教程中讲解。
+
+将图片资源复制到内存中需要耗费一定的时间，为了避免在游戏过程中因为加载图片产生卡顿，你可以在游戏开始前调用 `Image::load` 函数来提前将游戏中用到的图片加载到内存中。
+
+```cpp
+Image::load("图片1.png");
+Image::load("图片2.png");
+Image::load("图片3.png");
+```
+
+
+
+## Font 字体类
+
+如果你想设置 [Text](/tutorial/node/text.html) 的字体、粗细、字号等等属性，就需要为它创建一个 Font 。
+
+<Note>
+  Font 不是节点，因为它仅仅描述了文本的样式。Font 不能显示在屏幕上，也不能进行旋转之类的操作。
+</Note>
+
+```cpp
+auto text = gcnew Text("Hello Easy2D!");
+
+// 创建一个字体，宋体、字号40、粗体、斜体
+Font font = Font();
+font.family = "宋体";
+font.size = 40;
+font.weight = Font::Weight::Bold;
+font.italic = true;
+
+// 设置字体
+text->setFont(font);
+```
+
+![设置了字体后的Text](/assets/images/tutorial/font1.png)
+
+分步骤进行上面的操作虽然简洁明了，但是熟悉了相关操作后，上面的代码难免显得有些啰嗦。你可以直接在 Text 的构造函数中传入更多的参数来指定它的字体样式：
+
+```cpp
+// 在创建文本的同时指定它的字体样式
+auto text = gcnew Text("Hello Easy2D!", Font("宋体", 40, Font::Weight::Bold));
+```
+
+<Note>
+  没有设置 Text 的字体时，它会自动创建一个默认字体并使用。
+</Note>
+
+多个 Text 可以使用一个 Font，例如下面的代码中 text1 和 text2 使用了同一个 Font 对象。
+
+text1 和 text2 在内部会各自拷贝一份 Font，所以创建文字后再修改 font 不会影响 text1 和 text2。
+
+```cpp
+Font font = Font("", 40);                  // 系统默认字体、字号40
+auto text1 = gcnew Text("Hello", font);    // text1 使用 font
+auto text2 = gcnew Text("Easy2D", font);   // text2 也使用 font
+```
+
+
+
+## DrawingStyle 绘图样式
+
+`DrawingStyle` 结构体提供了填充颜色、描边颜色等绘图设置，可以被 [Text](/tutorial/node/text.html) 、[ShapeNode](/tutorial/node/shape.html) 等节点使用。
+
+```cpp
+// 创建绘图样式
+DrawingStyle style;
+style.mode = DrawingStyle::Mode::Solid; // 绘图模式为填充
+style.fillColor = Color::White;         // 填充色
+style.strokeColor = Color::Red;         // 描边色
+style.strokeWidth = 2.0;                // 描边宽度
+style.lineJoin = LineJoin::Miter;       // 线条相交样式
+```
+
+其中绘图模式 `DrawingStyle::Mode` 有以下几种
+
+```cpp
+enum class Mode
+{
+    Solid,  /* 填充 */
+    Round,  /* 轮廓 */
+    Fill,   /* 轮廓 + 填充 */
+};
+```
+
+
+
+## Function 函数包装器
+
+Function 类是一种函数包装器，它是 std::function 的别名。
+
+因为 Function 只是简单的给 std::function 起了个别名，所以有关 Function 的用法你都可以在各大学习网站上找到。
+
+在本教程中，只简单解答一下新手使用 Function 时的疑问：
+
+
+**Q:** Function最常见的用法有哪些？  
+**A:**  
+
+一个 Function 对象可以包装下列这几种可调用元素类型：函数、函数指针、类成员函数指针、或任意类型的函数对象（例如重载了 operator() 操作的结构体）
+
+举例说明：
+
+- 包装函数或函数指针
+
+```cpp
+void Func1()
+{
+    // ...
+}
+
+bool Func2(int, int)
+{
+    // ...
+}
+
+class T
+{
+public:
+    static void Func3()
+    {
+        // ...
+    }
+};
+
+// 包装不同类型的函数
+Function<void()> func1 = Func1;
+Function<bool(int, int)> func2 = Func2;
+Function<void()> func3 = T::Func3;
+```
+
+- 包装类成员函数
+
+```cpp
+class T
+{
+public:
+    void Func()
+    {
+        // ...
+    }
+};
+
+// T 类型的变量
+T t;
+
+// 包装类成员函数
+Function<void()> func = std::bind(&T::Func, &t);
+```
+
+- 包装任意类型的可调用对象（Callable Object）
+
+```cpp
+// Lambda 函数
+auto lambda = []()
+{
+    // ...
+};
+
+// 包装 Lambda 函数
+Function<void()> func = lambda;
+```
