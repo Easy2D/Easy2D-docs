@@ -1,0 +1,263 @@
+export const metadata = {
+  title: '功能模块',
+  description: 'TODO',
+}
+
+## Game 游戏类
+
+Game 类控制整个游戏的进度和流程，管理所有资源的初始化和释放。
+
+当然，它最主要的功能是初始化游戏、启动游戏和销毁游戏资源：
+
+```cpp
+// 初始化游戏
+if (Game::init())
+{
+    // 启动游戏
+    Game::start();
+}
+// 游戏结束，销毁资源
+Game::destroy();
+```
+
+Game::init 函数默认会创建一个 640x480 大小的窗口，初始化时也可以设置窗口的标题和大小：
+
+```cpp
+// 创建标题为 Hello，大小为 1000x800 的窗口
+if (Game::init("Hello", 1000, 800))
+{
+    // 初始化成功
+}
+```
+
+Game 类启动游戏时可以指定期望的帧率（需要关闭垂直同步功能，详见 Renderer 渲染器）
+
+```cpp
+Game::start(60);    // 期望 60 FPS
+```
+
+Game 类还可以控制游戏的暂停和继续，游戏暂停后所有的定时器、动画、更新函数都会暂停，只有按钮正常运行，所以你可以在按钮的回调函数中控制游戏暂停。
+
+```cpp
+// 暂停游戏
+Game::pause();
+// 继续游戏
+Game::resume();
+// 判断游戏是否正在暂停
+bool isPaused = Game::isPaused();
+```
+
+在代码的任何地方调用 quit 函数可以直接让游戏退出：
+
+```cpp
+// 退出游戏
+Game::quit();
+```
+
+Game 类还有一些不建议手动调用的函数，例如 reset 可以重置游戏内部计时：
+
+```cpp
+Game::reset();
+```
+
+
+
+## Window 窗口类
+
+Window 类封装了有关窗口操作的一些函数，例如修改窗口大小等等。
+
+Window 类的常用函数如下：
+
+```cpp
+// 修改窗口大小为 1000x800
+Window::setSize(1000, 800);
+// 修改窗口标题为 Hello
+Window::setTitle("Hello");
+// 设置鼠标样式为“手指针”
+Window::setCursor(Window::Cursor::Hand);
+// 获取窗口宽度
+float width = Window::getWidth();
+// 获取窗口高度
+float height = Window::getHeight();
+// 获取窗口大小
+Size size = Window::getSize();
+// 获取窗口标题
+String title = Window::getTitle();
+```
+
+Window 类除了可以设置窗口大小、标题外，还可以设置窗口图标，需要先将 ico 格式图标加入到 VS 资源中，然后调用下面的代码：
+
+```cpp
+// 设置窗口图标为资源 IDR_ICON1 所在的图标
+Window::setIcon(IDR_ICON1);
+```
+
+Window 类还封装了弹窗提示的函数，类似于 MessageBox：
+
+```cpp
+// 弹出一个提示窗口
+Window::info("这是一条提示", "提示标题");
+// 弹出一个警告窗口
+Window::warning("这是一条警告", "警告标题");
+// 弹出一个错误窗口
+Window::error("这是一条错误", "错误标题");
+```
+
+Window 类还可以设置自定义鼠标指针，例如将一个 Sprite 精灵作为指针渲染
+
+```cpp
+// 假设有 sprite 对象，把它作为指针
+Window::setCustomCursor(sprite);
+
+// 可以根据不同的指针类型渲染不同内容
+Window::setCustomCursor([](Window::Cursor cursor) -> Node* {
+    if (cursor == Window::Cursor::Normal) {
+        // 普通指针
+        return gcnew Sprite("cursor_normal.png");
+    }
+    if (cursor == Window::Cursor::Hand) {
+        // 手掌指针
+        return gcnew Sprite("cursor_hand.png");
+    }
+    // 其他情况使用系统默认指针
+    return nullptr;
+});
+```
+
+
+
+## Input 用户输入
+
+Input 类用来获取用户的鼠标或键盘输入，以实现游戏和用户的简单交互。
+
+例如，判断一个键盘按键是否正在按下：
+
+```cpp
+// 获取字母 A 键是否正被按下
+bool isDown = Input::isDown(KeyCode::A);
+```
+
+这个函数同样可以对鼠标按键有效：
+
+```cpp
+// 获取鼠标左键是否正被按下
+bool isDown = Input::isDown(MouseCode::Left);
+```
+
+Input 不止可以获取正在按下的状态，还可以判断按键是否刚刚按下、或刚刚抬起：
+
+```cpp
+// 判断字母 A 键是否刚刚按下
+bool isPressed = Input::isPressed(KeyCode::A);
+// 判断字母 A 键是否刚刚抬起
+bool isReleased = Input::isReleased(KeyCode::A);
+```
+
+Input 类可以直接获取鼠标的当前位置：
+
+```cpp
+// 获取鼠标位置
+Point mousePos = Input::getMousePos();
+```
+
+如果你需要获取鼠标在某个方向的移动增量，例如，你想实现在游戏中显示自定义图片的鼠标样式，可能需要先隐藏系统鼠标，然后通过获取鼠标移动增量，来画出一个虚拟鼠标：
+
+```cpp
+// 获取鼠标 X 方向的位移增量
+float deltaX = Input::getMouseDeltaX();
+// 获取鼠标 Y 方向的位移增量
+float deltaY = Input::getMouseDeltaY();
+// 获取鼠标滚轮的位移增量
+float deltaZ = Input::getMouseDeltaZ();
+```
+
+
+
+## Time 时间类
+
+Time 类用来管理游戏的时间，它辅助 Game 类处理何时更新游戏、何时释放CPU等。
+
+Time 类提供给开发者的函数有限，如下：
+
+```cpp
+// 获取上一帧与当前帧的时间间隔（秒）
+float dt = Time::getDeltaTime();
+
+// 获取上一帧与当前帧的时间间隔（毫秒）
+unsigned int dtMs = Time::getDeltaTimeMilliseconds();
+
+// 获取游戏总时长（秒）
+float totalTime = Time::getTotalTime();
+
+// 获取游戏总时长（毫秒）
+unsigned int totalTimeMs = Time::getTotalTimeMilliseconds();
+```
+
+
+
+## Renderer 渲染器
+
+Renderer 封装了有关渲染的所有函数，当然大部分函数都不需要开发者手动调用。
+
+Renderer 类建议开发者的使用函数如下：
+
+```cpp
+// 将游戏画面背景色设为白色
+Renderer::setBackgroundColor(Color::White);
+// 显示画面 FPS
+Renderer::showFps(true);
+// 开启或关闭垂直同步（默认开启）
+Renderer::setVSync(false);
+```
+
+如果你确实需要实现自定义的渲染行为，例如当你需要渲染非常多的物体（一个巨大的地图或其他东西），直接使用 Sprite 会导致游戏卡顿时，可以实现一个自定义的 Sprite 类，直接调用原生函数来提升渲染速度：
+
+```cpp
+// 获取 Direct2D 的 ID2D1HwndRenderTarget 对象
+// 有关该类的使用方法，请查阅微软官方文档
+// https://docs.microsoft.com/en-us/windows/win32/api/d2d1/nn-d2d1-id2d1hwndrendertarget
+auto renderTarget = Renderer::getRenderTarget();
+```
+
+
+
+## Logger 日志
+
+Logger 提供了简单的日志记录功能，用于辅助开发者进行调试。
+
+开启或关闭 Logger 系统只需要一行代码（Logger默认是开启状态）：
+
+```cpp
+// 打开日志系统
+Logger::enable();
+// 关闭日志系统
+Logger::disable();
+```
+
+Logger 提供了三种日志等级，分别是 message（消息）、warning（警告）、error（错误），三种等级都可以用类似 printf 函数的格式化方式输出日志：
+
+```cpp
+// 输出一行消息
+Logger::messageln("这是一条消息，同时输出一个数字 %d", 123);
+// 输出一行警告
+Logger::warningln("这是一条警告，同时输出一个浮点数 %.2f", 1.23);
+// 输出一行错误
+Logger::errorln("这是一条错误，同时输出一个字符串 %s", "字符串");
+```
+
+### 关于控制台
+
+使用 VS 编译的程序主要分为 `控制台程序（Console）` 和 `Win32程序` 两种，一般初学者都习惯于创建控制台程序，它的特点是程序启动后会有一个黑框框，执行printf函数可以在黑框框中输出文字。
+
+但是对于游戏开发而言，控制台（也就是黑框框）是不应该出现的，所以游戏开发应选择 `Win32程序` 方式创建项目。
+
+在 Win32 程序中，由于不存在控制台，我们 Logger 输出的日志也就看不到了，这时候可以使用 Logger 提供的函数创建一个控制台出来：
+
+```cpp
+// 显示控制台
+Logger::showConsole(true);
+```
+
+<Note>
+  这个函数应该只在调试时使用，发布游戏前应去除这个函数。
+</Note>
