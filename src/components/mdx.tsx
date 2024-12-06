@@ -1,9 +1,9 @@
-import Link from 'next/link'
 import clsx from 'clsx'
 
 import { Feedback } from '@/components/Feedback'
 import { Heading } from '@/components/Heading'
 import { Prose } from '@/components/Prose'
+import { Button } from '@/components/Button'
 
 export const a = Link
 export { Button } from '@/components/Button'
@@ -123,5 +123,21 @@ export function Property({
         </dd>
       </dl>
     </li>
+  )
+}
+
+export function Link({
+  href,
+  children,
+}: {
+  href: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="not-prose">
+      <Button href={href} target='_blank' variant="text" arrow="right">
+        {children}
+      </Button>
+    </div>
   )
 }

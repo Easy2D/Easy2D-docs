@@ -9,7 +9,7 @@ export const metadata = {
 
 相信你已经配置好了 Easy2D 的环境，让我们新建一个空的控制台程序，从这里起步。{{ className: 'lead' }}
 
-```cpp
+```cpp {{ title: "main.cpp" }}
 #include <easy2d/easy2d.h>
 
 using namespace easy2d;
@@ -24,7 +24,7 @@ int main()
 
 `Game::init()` 函数对游戏进行初始化，它必须在 main 函数的第一行调用，且只能调用一次。如果在初始化前进行了其他操作，有可能出现未知的错误。当初始化失败时，init() 会返回 false。
 
-```cpp
+```cpp {{ title: "main.cpp" }}
 int main()
 {
     // 初始化
@@ -42,7 +42,7 @@ int main()
 
 有了这三个函数，我们就可以构建一个没有任何画面的窗口程序了。一个 Easy2D 程序应由 **初始化**、**设计游戏内容**、**开始游戏**、**销毁资源** 四个部分组成，下面的代码运行后将显示一个无画面的黑窗口。
 
-```cpp
+```cpp {{ title: "main.cpp" }}
 #include <easy2d/easy2d.h>
 
 using namespace easy2d;
@@ -129,7 +129,7 @@ scene->addChild(text);
 
 上面的内容都属于 **设计游戏内容**，所以上面这个 Demo 的完整代码如下所示
 
-```cpp
+```cpp {{ title: "main.cpp" }}
 #include <easy2d/easy2d.h>
 
 using namespace easy2d;
