@@ -235,7 +235,18 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: '简介', href: '/' },
       { title: '快速上手', href: '/quickstart' },
-      { title: '简单示例', href: '/demos' },
+    ],
+  },
+  {
+    title: '简单示例',
+    links: [
+      { title: '旋转的文字', href: '/demos/rotating-text' },
+      { title: '移动的小人', href: '/demos/moving-man' },
+    ],
+  },
+  {
+    title: 'API 文档',
+    links: [
       { title: '功能模块', href: '/modules' },
       { title: '基础类型', href: '/base' },
       { title: '节点类型', href: '/nodes' },
@@ -245,13 +256,12 @@ export const navigation: Array<NavGroup> = [
     ],
   },
   {
-    title: 'Resources',
+    title: '进阶教程',
     links: [
-      { title: 'Contacts', href: '/contacts' },
-      { title: 'Conversations', href: '/conversations' },
-      { title: 'Messages', href: '/messages' },
-      { title: 'Groups', href: '/groups' },
-      { title: 'Attachments', href: '/attachments' },
+      { title: '碰撞判断', href: '/collision' },
+      { title: '垃圾回收', href: '/gc' },
+      { title: '调试游戏', href: '/debug' },
+      { title: '其他说明', href: '/more' },
     ],
   },
 ]
