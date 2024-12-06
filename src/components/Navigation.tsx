@@ -236,8 +236,12 @@ export const navigation: Array<NavGroup> = [
       { title: '简介', href: '/' },
       { title: '快速上手', href: '/quickstart' },
       { title: '简单示例', href: '/demos' },
+      { title: '功能模块', href: '/modules' },
+      { title: '基础类型', href: '/base' },
       { title: '节点类型', href: '/nodes' },
       { title: '节点动画', href: '/actions' },
+      { title: '事件监听', href: '/listeners' },
+      { title: '辅助工具', href: '/utils' },
     ],
   },
   {
