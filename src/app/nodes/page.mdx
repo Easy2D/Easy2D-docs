@@ -121,7 +121,7 @@ node1->addChildren({ node2, node3 });
 
 节点可以收到 `鼠标点击事件`、`键盘按下事件`、`键盘抬起事件` 等等事件，并且使用 `Listener（监听器）` 来监听某一事件的发生。
 
-有关监听器的更多用法，请查阅 [Listener 监听器](/tutorial/common/listener.html)
+有关监听器的更多用法，请查阅 [Listener 监听器](/listeners)
 
 ### 节点的更多功能
 
@@ -152,7 +152,7 @@ if (box1.intersects(box2))
 }
 ```
 
-有关碰撞判断的更多用法，请查阅 [节点碰撞](/tutorial/advanced/collision.html)
+有关碰撞判断的更多用法，请查阅 [节点碰撞](/collision)。
 
 
 ## Text 文本
@@ -202,9 +202,9 @@ auto text = gcnew Text("Hello Easy2D!");
 text->setTextStyle(style);
 ```
 
-<Note>
-  Font 文字控制文字的字体、字号、粗细等等，详情请参阅 [Font 字体](/tutorial/common/font.html)。
-</Note>
+<ExternalLink href="/base#font-字体">
+  查看更多关于 Font 字体的内容
+</ExternalLink>
 
 可以单独设置某一项样式，例如文字比较多，你可以设置它自动换行：
 
@@ -218,7 +218,7 @@ text->setWordWrappingWidth(70);     // 设置文字自动换行的宽度
 
 ### 绘图样式
 
-`Text` 支持设置 `DrawingStyle` 绘图样式，以设置文字填充颜色、描边颜色等，详情请参阅 [DrawingStyle](/tutorial/common/drawing-style.html)。
+`Text` 支持设置 `DrawingStyle` 绘图样式，以设置文字填充颜色、描边颜色等，详情请参阅 [DrawingStyle](/base#drawingstyle-绘图样式)。
 
 ```cpp
 // 创建文字绘图样式
@@ -422,7 +422,7 @@ scene->addChild(shapeNode);
 
 ### 填充与轮廓
 
-`ShapeNode` 支持设置 `DrawingStyle` 绘图样式，以设置填充颜色、描边颜色等，详情请参阅 [DrawingStyle](/tutorial/common/drawing-style.html)。
+`ShapeNode` 支持设置 `DrawingStyle` 绘图样式，以设置填充颜色、描边颜色等，详情请参阅 [DrawingStyle](/base#drawingstyle-绘图样式)。
 
 ```cpp
 // 创建绘图样式
@@ -496,7 +496,7 @@ void MyDrawing(CanvasBrush* brush)
 }
 ```
 
-`CanvasBrush` 支持设置 `DrawingStyle` 绘图样式，以设置填充颜色、描边颜色等，详情请参阅 [DrawingStyle](/tutorial/common/drawing-style.html)。
+`CanvasBrush` 支持设置 `DrawingStyle` 绘图样式，以设置填充颜色、描边颜色等，详情请参阅 [DrawingStyle](/base#drawingstyle-绘图样式)。
 
 ```cpp
 // 创建绘图样式

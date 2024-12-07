@@ -80,7 +80,7 @@ export const Header = forwardRef<
       <div className="flex items-center gap-5">
         <nav className="hidden md:block">
           <ul role="list" className="flex items-center gap-8">
-            <TopLevelNavItem href="https://easy2d.cn">Easy2D</TopLevelNavItem>
+            <TopLevelNavItem href="https://easy2d.cn">回到官网</TopLevelNavItem>
           </ul>
         </nav>
         <div className="hidden md:block md:h-5 md:w-px md:bg-zinc-900/10 md:dark:bg-white/15" />

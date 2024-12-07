@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import clsx from 'clsx'
 
 import { Feedback } from '@/components/Feedback'
@@ -126,18 +127,20 @@ export function Property({
   )
 }
 
-export function Link({
+export function ExternalLink({
   href,
+  target,
   children,
 }: {
   href: string
+  target?: string
   children: React.ReactNode
 }) {
   return (
-    <div className="not-prose">
-      <Button href={href} target='_blank' variant="text" arrow="right">
+    <span className="not-prose">
+      <Button href={href} target={target} variant="text" arrow="right">
         {children}
       </Button>
-    </div>
+    </span>
   )
 }

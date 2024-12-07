@@ -190,7 +190,9 @@ KeyCode::Space
 bool isDown = Input::isDown(KeyCode::A);
 ```
 
-关于 Input 类的使用请查阅 [Input 获取用户输入](/tutorial/base/input.html)
+<ExternalLink href="/modules#input-用户输入">
+  查看更多关于 Input 类的用法
+</ExternalLink>
 
 
 
@@ -216,7 +218,7 @@ Image::load("图片3.png");
 
 ## Font 字体类
 
-如果你想设置 [Text](/tutorial/node/text.html) 的字体、粗细、字号等等属性，就需要为它创建一个 Font 。
+如果你想设置 [Text](/nodes#text-文本) 的字体、粗细、字号等等属性，就需要为它创建一个 Font 。
 
 <Note>
   Font 不是节点，因为它仅仅描述了文本的样式。Font 不能显示在屏幕上，也不能进行旋转之类的操作。
@@ -263,7 +265,7 @@ auto text2 = gcnew Text("Easy2D", font);   // text2 也使用 font
 
 ## DrawingStyle 绘图样式
 
-`DrawingStyle` 结构体提供了填充颜色、描边颜色等绘图设置，可以被 [Text](/tutorial/node/text.html) 、[ShapeNode](/tutorial/node/shape.html) 等节点使用。
+`DrawingStyle` 结构体提供了填充颜色、描边颜色等绘图设置，可以被 [Text](/nodes#text-文本) 、[ShapeNode](/nodes#shapenode-形状节点) 等节点使用。
 
 ```cpp
 // 创建绘图样式
