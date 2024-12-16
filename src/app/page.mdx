@@ -40,12 +40,10 @@ export const metadata = {
 ### 2. 使用源码编译（高手选择）
 
 1. 打开 [Github 地址](https://github.com/easy2d/easy2d)，点击页面右上角的 `Clone or download`，克隆本仓库或者下载 zip 源码
-2. 使用 Visual Studio 2015 或更高版本，打开目录下的 sln 文件
-3. 选择合适的编译平台（Win32 或 x64）和编译配置（Debug 或 Release），编译 Easy2D 项目
-4. 创建你的新项目，并在解决方案管理器右键打开项目属性
-5. 把 `C/C++` ==> `附加包含目录` 设置为 Easy2D 项目的 `/Easy2D/include/` 目录
-6. 把 `链接器` ==> `附加库目录` 设置为 Easy2D 项目的 `/Easy2D/output/` 目录
-7. 开始编写 Easy2D 游戏吧！
+2. 在你自己的 VS 项目里, 右键你的解决方案并选择 “添加” => “现有项目”，选择第 1 步下载的源代码中的 `Easy2D/Easy2D.vcxproj` 文件
+3. 右键你的项目，打开 “属性” 页，编辑 `C\C++` => `常规` 的 “附加引用目录” 选项，设置为第 1 步下载的源代码中的 `Easy2D/include` 目录
+4. 右键你的项目，选择 “添加” => “引用”，并选中 Easy2D 项目
+5. 开始编写 Easy2D 游戏吧！
 
 ## 开始使用！
 
