@@ -273,11 +273,11 @@ struct MyEvent
 
 ```cpp
 // 创建自定义事件
-MyEvent* evt = gcnew MyEvent;
+MyEvent evt;
 // 设置自定义事件的成员变量
-evt->value = 3;
+evt.value = 3;
 // 分发该事件，事件会发送给节点及其所有子节点
-node->dispatch(evt);
+node->dispatch(&evt);
 ```
 
 在监听器中处理自定义事件：
