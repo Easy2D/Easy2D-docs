@@ -276,8 +276,8 @@ struct MyEvent
 MyEvent evt;
 // 设置自定义事件的成员变量
 evt.value = 3;
-// 分发该事件，事件会发送给节点及其所有子节点
-node->dispatch(&evt);
+// 分发该事件，事件会发送给当前场景下的所有监听器
+SceneManager::dispatch(&evt);
 ```
 
 在监听器中处理自定义事件：
