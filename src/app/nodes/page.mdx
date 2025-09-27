@@ -460,39 +460,40 @@ rect->setStrokeWidth(2.0);
 ```cpp
 // 创建一张 (300, 200) 大小的画布
 auto canvas = gcnew Canvas(Size(300, 200));
-// 设置绘图函数为 MyDrawing 函数
-canvas->draw(MyDrawing);
-// 添加到场景中
-scene->addChild(canvas);
+// 调用 beginDraw 开始绘图，获得画刷
+auto brush = canvas->beginDraw();
 
-// MyDrawing 的实现
-void MyDrawing(CanvasBrush* brush)
-{
-    // brush 是画布的画笔，画笔同样有坐标、旋转角度、缩放等属性
-    // 我们移动一下画笔
-    brush->setPos(Point(20, 20));
+// brush 是画布的画笔，画笔同样有坐标、旋转角度、缩放等属性
+// 我们移动一下画笔
+brush->setPos(Point(20, 20));
 
-    // 画一个绿色矩形
-    // 画笔具有 DrawingStyle 绘图样式属性，我们设置画笔为绿色
-    brush->setFillColor(Color::Green);
-    // 设置画笔绘图模式为填充
-    brush->setDrawingMode(DrawingStyle::Mode::Solid);
-    // 画矩形
-    brush->drawShape(gcnew Shape(Shape::Rect, Rect(Point(), Size(300, 200))));
+// 画一个绿色矩形
+// 画笔具有 DrawingStyle 绘图样式属性，我们设置画笔为绿色
+brush->setFillColor(Color::Green);
+// 设置画笔绘图模式为填充
+brush->setDrawingMode(DrawingStyle::Mode::Solid);
+// 画矩形
+brush->drawShape(gcnew Shape(Shape::Rect, Rect(Point(), Size(300, 200))));
 
-    // 写一段文字
-    // 移动一下画笔
-    brush->setPos(Point(120, 20));
-    // 旋转一下画笔
-    brush->setRotation(-30);
-    // 设置填充色为橘红色
-    brush->setFillColor(Color::OrangeRed);
-    // 写文字
-    brush->drawText("Hello", Point(), Font("", 22, Font::Weight::Bold));
+// 写一段文字
+// 移动一下画笔
+brush->setPos(Point(120, 20));
+// 旋转一下画笔
+brush->setRotation(-30);
+// 设置填充色为橘红色
+brush->setFillColor(Color::OrangeRed);
+// 写文字
+brush->drawText("Hello", Point(), Font("", 22, Font::Weight::Bold));
 
-    // 画一张图片
-    brush->drawImage(Image::load("image.png"));
-}
+// 画一张图片
+brush->drawImage(Image::load("image.png"));
+
+// 结束绘图
+canvas->endDraw();
+
+// 绘图的结果可以导出为 Image 类型，加载到 Sprite 中
+auto sprite = gcnew Sprite(canvas->getOutputImage());
+scene->addChild(sprite);
 ```
 
 `CanvasBrush` 支持设置 `DrawingStyle` 绘图样式，以设置填充颜色、描边颜色等，详情请参阅 [DrawingStyle](/base#drawingstyle-绘图样式)。
